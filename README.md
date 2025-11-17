@@ -2,6 +2,8 @@
 
 This code runs the a modified version of the GIVE IAM from Rennert et al., Nature, 2022, to calculate a domestic (i.e., within-US) social cost of CO2. Four sectors (ag, temperature-driven mortality, energy use, and sea level rise) were originally included. We have added a component to include monetized damages from smoke-related mortality.
 
+The smoke mortality projections are based on a model developed and published by Qiu et al., Nature, 2025 (https://www.nature.com/articles/s41586-025-09611-w). The integration into GIVE and the estimation of a smoke-specific social cost of carbon is described in Qiu et al., currently in review. A preprint is available here: https://www.nber.org/papers/w33829.
+
 This code was written by Christopher Callahan and Lisa Rennels. 
 
 # Requirements 
