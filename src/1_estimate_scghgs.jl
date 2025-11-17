@@ -24,7 +24,7 @@ fair_parameter_set_ids = rffsp_fair_sequence[1:num_trials, "fair_id"]
 rffsp_sampling_ids     = rffsp_fair_sequence[1:num_trials, "rffsp_id"]
 
 # set emissions years
-years = [2020,2025,2030]
+years = [2020] #[2025,2030] #[2020,2025,2030]
 
 # list gases
 gases = [:CO2]
@@ -103,12 +103,12 @@ for year in years, gas in gases, smokecrf in smoke_crf, polynum in polynums, fee
 
     # export full distribution
     mkpath(joinpath(@__DIR__, "../output/scghgs/full_distributions"))
-    Parquet.write_parquet(joinpath(@__DIR__, "../output/scghgs/full_distributions/smoke_mortality_sc-$(gas)_$(year)pulse_$(smokecrf)crf_$(polynum)poly_$(feedback).parquet"), scghgs)
+    Parquet.write_parquet(joinpath(@__DIR__, "../output/scghgs/full_distributions/smoke_mortality_sc-$(gas)_$(year)pulse_$(smokecrf)crf_$(polynum)poly_$(feedback)_lag1.parquet"), scghgs)
 
     # collapse to the certainty equivalent scghgs
     scghgs_mean = combine(groupby(scghgs, [:region, :sector, :discount_rate]), :scghg => (x -> mean(x)) .=> :scghg)
 
     # export average scghgs    
-    scghgs_mean |> save(joinpath(@__DIR__, "../output/scghgs/smoke_mortality_sc-$(gas)_$(year)pulse_$(smokecrf)crf_$(polynum)poly_$(feedback).csv"));
+    scghgs_mean |> save(joinpath(@__DIR__, "../output/scghgs/smoke_mortality_sc-$(gas)_$(year)pulse_$(smokecrf)crf_$(polynum)poly_$(feedback)_lag1.csv"));
 
 end
