@@ -49,7 +49,7 @@ function get_smoke_model(;  Agriculture_gtap::String = "midDF",
     # --------------------------------------------------------------------------
     
     # Parameters and connections
-    params = load(joinpath(@__DIR__, "..", "data","smoke_params","poly"*string(polynomial)*"_death_per_million_coef_final20yr_"*string(feedback)*".csv")) |> DataFrame
+    params = load(joinpath(@__DIR__, "..", "data","smoke_params","poly"*string(polynomial)*"_death_per_million_coef_final20yr_"*string(feedback)*"_lag1.csv")) |> DataFrame
     crf_str = smoke_damages_crf * " CRF"
     params_crf = filter(row -> row.model == crf_str, params)
     smoke_boot = Vector(params_crf[:,3])
