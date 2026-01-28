@@ -1,8 +1,9 @@
 using CSVFiles, DataFrames
 
-## constant values that are consistent across modules and analyses
+# constant values that are consistent across modules and analyses
 
-## GIVE results are in 2005 USD, this is the price deflator to bring the results to 2020 USD. accessed 09/13/2022. source: https://apps.bea.gov/iTable/iTable.cfm?reqid=19&step=3&isuri=1&select_all_years=0&nipa_table_list=13&series=a&first_year=2005&last_year=2020&scale=-99&categories=survey&thetable=
+# GIVE results are in 2005 USD, this is the price deflator to bring the results
+# to 2020 USD. accessed 09/13/2022. source: https://apps.bea.gov/iTable/iTable.cfm?reqid=19&step=3&isuri=1&select_all_years=0&nipa_table_list=13&series=a&first_year=2005&last_year=2020&scale=-99&categories=survey&thetable=
 const pricelevel_2005_to_2020 = 113.648 / 87.504
 
 # named global discount rates
@@ -26,6 +27,6 @@ const domestic_discount_rates =
 # seed for random number generator (consistent within Julia versions)
 const seed = 42
 
-# read the series of rffsp-fair pairings, these were randomly selected pairings, please 
-# read GIVE documentation for other functionality.
+# read the series of rffsp-fair pairings, these were randomly selected pairings,
+# please read GIVE documentation for details on socioeconomic scenarios
 const rffsp_fair_sequence = load(joinpath(@__DIR__, "../data/rffsp_fair_sequence.csv")) |> DataFrame

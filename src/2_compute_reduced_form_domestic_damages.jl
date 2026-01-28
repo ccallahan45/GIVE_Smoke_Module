@@ -1,8 +1,8 @@
 using Pkg
 
-# Instantiate environment
+# activate and instantiate environment
 Pkg.activate(joinpath(@__DIR__, ".."))
-#Pkg.instantiate() # run once per machine
+Pkg.instantiate() # only need to run this once per machine
 
 using Mimi
 using MimiGIVE 
@@ -23,8 +23,8 @@ num_trials = 10_000
 fair_parameter_set_ids = rffsp_fair_sequence[1:num_trials, "fair_id"]
 rffsp_sampling_ids     = rffsp_fair_sequence[1:num_trials, "rffsp_id"]
 
-# set emissions years
-years = [2020]
+# list emissions years
+years = [2020] # any year from 2020 to 2300
 
 # list gases
 gases = [:CO2]
@@ -33,14 +33,14 @@ gases = [:CO2]
 smoke_crf = ["2part","binned","totalPM"] # "binned" or "totalPM" or "2part"
 
 # choose which fire-fuel feedback setting to use
-feedbacks = ["baseline","dynamic"]
+feedbacks = ["baseline","dynamic"] # "baseline" or "dynamic"
 
 # choose which polynomial the damage function uses
-polynums = [2,4]
+polynums = [2,4] # 2 for quadratic, 4 for 4th degree polynomial
 
-# choose the model objects that you would like to save (optional).
+# choose the model variables and paramters that you would like to save (can be left empty)
 save_list = [
-                (:global_netconsumption, :net_consumption), # GLobal net per capita consumption in US\$2005/yr/person
+                (:global_netconsumption, :net_consumption), # Global net per capita consumption in US\$2005/yr/person
                 (:Smoke, :temperature), # Global average surface temperature anomaly relative to pre-industrial (°C)
                 (:DamageAggregator, :total_damage_domestic) # US\$2005/yr
             ]

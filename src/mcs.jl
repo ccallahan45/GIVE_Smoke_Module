@@ -1,14 +1,7 @@
 using Mimi, MimiGIVE, Distributions, Dates
 
-
-# used for Option 1 in Advanced Topic: Uncertainty and Intermediate Outputs
-# function smoke_modify_mcs!(mcs)
-#     Mimi.add_RV!(mcs, :rv_bootid, Mimi.EmpiricalDistribution(collect(1:1:10000)))
-#     Mimi.add_transform!(mcs, :Smoke, :bootid, :(=), :rv_bootid)
-#     return mcs
-# end
-
-# used for Option 2 in Advanced Topic: Uncertainty and Intermediate Outputs
+# Function to obtain Monte Carlo Simulation object with added somke-related 
+# mortality sector uncertainty
 function get_smoke_mcs(trials; args...)
     mcs = MimiGIVE.get_mcs(trials; args...) # get the original MCS
 
@@ -18,6 +11,7 @@ function get_smoke_mcs(trials; args...)
     return mcs
 end
 
+# Function to run the Monte Carlo Simulation
 function run_smoke_mcs(;trials::Int64 = 10000, 
                             output_dir::Union{String, Nothing} = nothing, 
                             save_trials::Bool = false,
