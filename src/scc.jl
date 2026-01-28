@@ -1,11 +1,10 @@
 using Dates, CSVFiles, DataFrames, FileIO, Mimi, Query
 
-# import constants from MimiGIVE
+# import some constants from MimiGIVE to avoid needing MimiGIVE. prefix
 import MimiGIVE: _model_years, _damages_years, _damages_idxs, scc_gas_molecular_conversions, scc_gas_pulse_size_conversions
 
+# Load helper functions
 include("mcs.jl")
-
-# note we could import functions from MimiGIVE instead of using "MimiGIVE." prefix, but leaving prefix for clarity 
 include("utils/scc_streaming.jl")
 
 # Primary compute scc function

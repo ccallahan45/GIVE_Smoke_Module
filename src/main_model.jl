@@ -1,9 +1,30 @@
 using Mimi, MimiGIVE
 
+# load components
 include("components/smoke_damages.jl")
 include("components/DamageAggregator_Smoke.jl")
 include("components/Damages_RegionAggregatorSum_Smoke.jl")
 
+"""
+    get_smoke_model(;  Agriculture_gtap::String = "midDF",
+                            socioeconomics_source::Symbol = :RFF,
+                            SSP_scenario::Union{Nothing, String} = nothing,       
+                            RFFSPsample::Union{Nothing, Int} = nothing,
+                            Agriculture_floor_on_damages::Bool = true,
+                            Agriculture_ceiling_on_benefits::Bool = false,
+                            vsl::Symbol = :epa,
+                            smoke_damages_crf::String = "2part",
+                            polynomial::Int = 2,
+                            feedback::String = "baseline"
+                        )
+
+Obtain a MimiGIVE model augmented with moke-related mortality damages. Arguments
+additional to the original MimiGIVE model are as follows:
+
+- smoke_damages_crf (default "2part") - CRF to use for smoke damages, can be "binned", "totalPM", or "2part"
+- polynomial (default 2) - polynomial used by smoke-related mortality damage function, can be 2 (quadratic) or 4 (4th degree polynomial)
+- feedback (default "baseline") - fire-fuel feedback setting to use, can be "baseline" or "dynamic"
+"""
 function get_smoke_model(;  Agriculture_gtap::String = "midDF",
                             socioeconomics_source::Symbol = :RFF,
                             SSP_scenario::Union{Nothing, String} = nothing,       
