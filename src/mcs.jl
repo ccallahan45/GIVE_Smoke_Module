@@ -1,7 +1,11 @@
 using Mimi, MimiGIVE, Distributions, Dates
 
-# Function to obtain Monte Carlo Simulation object with added somke-related 
-# mortality sector uncertainty
+"""
+    get_smoke_mcs(trials; args...)
+
+Function to obtain Monte Carlo Simulation object with added somke-related 
+mortality sector uncertainty.
+"""
 function get_smoke_mcs(trials; args...)
     mcs = MimiGIVE.get_mcs(trials; args...) # get the original MCS
 
@@ -11,7 +15,22 @@ function get_smoke_mcs(trials; args...)
     return mcs
 end
 
-# Function to run the Monte Carlo Simulation
+"""
+    run_smoke_mcs(;trials::Int64 = 10000, 
+                                output_dir::Union{String, Nothing} = nothing, 
+                                save_trials::Bool = false,
+                                fair_parameter_set::Symbol = :random,
+                                fair_parameter_set_ids::Union{Vector{Int}, Nothing} = nothing,
+                                rffsp_sampling::Symbol = :random,
+                                rffsp_sampling_ids::Union{Vector{Int}, Nothing} = nothing,
+                                m::Mimi.Model = get_smoke_model(), # <-- using a different default model
+                                save_list::Vector = [],
+                                results_in_memory::Bool = true,
+                            )
+
+Function to run the Monte Carlo Simulation including smoke-related mortality
+damages uncertainty.
+"""
 function run_smoke_mcs(;trials::Int64 = 10000, 
                             output_dir::Union{String, Nothing} = nothing, 
                             save_trials::Bool = false,

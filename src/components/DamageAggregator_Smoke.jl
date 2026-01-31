@@ -1,24 +1,19 @@
 using Mimi
 
-# Aggregate damages across damage functions
+# ------------------------------------------------------------------------------
+# Component to aggregate damages across various spatial and sectoral dimensions
+# ------------------------------------------------------------------------------
 
 @defcomp DamageAggregator_Smoke begin
 
-    fund_regions = Index()
-    country = Index()
-    energy_countries = Index()
-    domestic_countries = Index()
-
+    # internally compute dimension as ints for speed
     domestic_idxs_country_dim = Parameter{Int}(index=[domestic_countries])
-    domestic_idxs_energy_countries_dim = Parameter{Int}(index=[domestic_countries])
-
-    # internally compute for speed
     domestic_idxs_country_dim_int = Variable{Int}(index=[domestic_countries])
+    
+    domestic_idxs_energy_countries_dim = Parameter{Int}(index=[domestic_countries])
     domestic_idxs_energy_countries_dim_int = Variable{Int}(index=[domestic_countries])
 
-    # inclusion of different damages
-
-    # By default the individual sectoral damage calculations are ON, including 
+    # by default the individual sectoral damage calculations are ON, including 
     # SLR which runs after the main model, while global damage function calculations
     # are OFF.
     include_cromar_mortality = Parameter{Bool}(default=true)
@@ -29,6 +24,7 @@ using Mimi
     include_dice2016R2 = Parameter{Bool}(default=false)
     include_hs_damage = Parameter{Bool}(default=false)
 
+    # damage inputs
     damage_cromar_mortality = Parameter(index=[time,country], unit="US\$2005/yr")
     damage_smoke = Parameter(index=[time,country], unit="US\$2005/yr")
     damage_ag = Parameter(index=[time,fund_regions], unit="billion US\$2005/yr")
@@ -42,12 +38,10 @@ using Mimi
     damage_smoke_regions = Parameter(index=[time,fund_regions], unit="US\$2005/yr")
     damage_energy_regions = Parameter(index=[time,fund_regions], unit="billion US\$2005/yr")
 
-    gdp = Parameter(index=[time,country], unit="billion US\$2005/yr")
-
+    # aggregated damages
     total_damage = Variable(index=[time], unit="US\$2005/yr")
     total_damage_regions = Variable(index=[time, fund_regions], unit="US\$2005/yr")
     total_damage_countries = Variable(index=[time, country], unit="US\$2005/yr") # ag damages disaggregated via method in AgricultureDamagesDisaggregator
-    total_damage_share = Variable(index=[time])
     total_damage_domestic = Variable(index=[time], unit="US\$2005/yr")
 
     # global annual aggregates - for interim model outputs and partial SCCs
@@ -81,7 +75,7 @@ using Mimi
         end
 
         # country level aggregates where ag damages disaggregated via method in
-        # AgricultureDamagesDisaggregator
+        # AgricultureDamagesDisaggregator component
         num_countries = length(d.country)
         v.total_damage_countries[t,:] =
             (p.include_cromar_mortality ? p.damage_cromar_mortality[t,:] : fill(0., num_countries)) +
@@ -103,17 +97,13 @@ using Mimi
             (p.include_dice2016R2       ? p.damage_dice2016R2[t] * 1e9 : 0.) +
             (p.include_hs_damage        ? p.damage_hs[t] * 1e9 : 0.)
 
-        gdp = sum(p.gdp[t,:]) * 1e9
-
-        v.total_damage_share[t] = v.total_damage[t] / gdp
-
-        # domestic annual aggregates - for interim model outputs and partial SCCs
+        # annual domestic aggregates - computed for interim model outputs and partial SCCs
         v.cromar_mortality_damage_domestic[t]   = sum(p.damage_cromar_mortality[t, v.domestic_idxs_country_dim_int])
         v.smoke_damage_domestic[t]              = sum(p.damage_smoke[t, v.domestic_idxs_country_dim_int])
         v.agriculture_damage_domestic[t]        = p.damage_ag[t,1] * 1e9 
         v.energy_damage_domestic[t]             = sum(p.damage_energy[t, v.domestic_idxs_energy_countries_dim_int] * 1e9)
 
-        # Calculate domestic damages
+        # total domestic aggregate
         v.total_damage_domestic[t] =
             (p.include_cromar_mortality ? v.cromar_mortality_damage_domestic[t] : 0.) +
             (p.include_ag               ? v.agriculture_damage_domestic[t] : 0.) +
