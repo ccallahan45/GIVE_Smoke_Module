@@ -1,12 +1,12 @@
 using Mimi
 
-# Component to support summing damages across fund regions -- used to support the 
-# DamageAggregator Component
+# ------------------------------------------------------------------------------
+# Component to support summing damages from input region to output region, for 
+# example from countries to FUND regions -- used to support the
+# DamageAggregator_Smoke Component
+# ------------------------------------------------------------------------------
 
 @defcomp Damages_RegionAggregatorSum_Smoke begin
-
-    ag_mapping_input_regions = Index()
-    ag_mapping_output_regions = Index()
 
     input_output_mapping = Parameter{String}(index=[ag_mapping_input_regions]) # one element per input region containing it's corresponding output region
     input_output_mapping_int = Variable{Int}(index=[ag_mapping_input_regions]) # internally computed for speed up

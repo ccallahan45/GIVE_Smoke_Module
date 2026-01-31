@@ -3,7 +3,9 @@ using FileIO, CSVFiles, DataFrames, Query
 # Helper functions for streaming disaggregated data within the compute_scc funciton
 
 function _smoke_stream_disagg_damages(m::Mimi.Model, output_dir::String, trialnum::Int, streams::Dict)	
+
     # println("Streaming out trialnum $trialnum ...")	
+    
     cromar_mortality_damages = getdataframe(m, :DamageAggregator, :damage_cromar_mortality) |> 	
                                     @filter(_.time > 2019) |> 	
                                     @rename(:damage_cromar_mortality => :damages) |>	

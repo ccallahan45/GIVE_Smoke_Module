@@ -97,7 +97,6 @@ function get_smoke_model(;  Agriculture_gtap::String = "midDF",
         set_param!(m, :Smoke, :β4_smoke, zeros(length(beta2_vec)))
     end
     
-    
     connect_param!(m, :Smoke => :temperature, :TempNorm_1850to1900 => :global_temperature_norm)
     connect_param!(m, :Smoke => :population, :Socioeconomic => :population)
     connect_param!(m, :Smoke => :vsl, :VSL => :vsl)

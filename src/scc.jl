@@ -7,7 +7,36 @@ import MimiGIVE: _model_years, _damages_years, _damages_idxs, scc_gas_molecular_
 include("mcs.jl")
 include("utils/scc_streaming.jl")
 
-# Primary compute scc function
+"""
+    compute_smoke_scc(m::Model = get_smoke_model(); 
+                year::Union{Int, Nothing} = nothing, 
+                last_year::Int = _model_years[end], 
+                prtp::Union{Float64,Nothing} = 0.015, 
+                eta::Union{Float64,Nothing} = 1.45,
+                discount_rates = nothing,
+                certainty_equivalent = false,
+                fair_parameter_set::Symbol = :random,
+                fair_parameter_set_ids::Union{Vector{Int}, Nothing} = nothing,
+                rffsp_sampling::Symbol = :random,
+                rffsp_sampling_ids::Union{Vector{Int}, Nothing} = nothing,
+                n = 0,
+                gas::Symbol = :CO2,
+                save_list::Vector = [],
+                output_dir::Union{String, Nothing} = nothing,
+                save_md::Bool = false,
+                save_cpc::Bool = false,
+                save_slr_damages::Bool = false,
+                compute_sectoral_values::Bool = false,
+                compute_disaggregated_values::Bool = false,
+                compute_domestic_values::Bool = false,
+                CIAM_foresight::Symbol = :perfect,
+                CIAM_GDPcap::Bool = false,
+                post_mcs_creation_function = nothing,
+                pulse_size::Float64 = 1.
+            )
+
+Primary compute scc function.
+"""
 function compute_smoke_scc(m::Model = get_smoke_model(); 
             year::Union{Int, Nothing} = nothing, 
             last_year::Int = _model_years[end], 
@@ -116,7 +145,22 @@ function compute_smoke_scc(m::Model = get_smoke_model();
     end
 end
 
-# Internal function to compute the SCC from a MarginalModel in a deterministic run
+"""
+    _compute_smoke_scc(mm::MarginalModel;
+                            year::Int,
+                            last_year::Int,
+                            prtp,
+                            eta,
+                            discount_rates,
+                            gas::Symbol,
+                            domestic::Bool,
+                            CIAM_foresight::Symbol,
+                            CIAM_GDPcap::Bool,
+                            pulse_size::Float64
+                        )
+
+Internal function to compute the SCC from a MarginalModel in a deterministic run.
+"""
 function _compute_smoke_scc(mm::MarginalModel;
                         year::Int,
                         last_year::Int,
@@ -323,7 +367,16 @@ function _compute_smoke_scc(mm::MarginalModel;
     end
 end
 
-# Post trial function to to after each trial within the MCS
+"""
+    smoke_post_trial_func(
+                            mcs::SimulationInstance,
+                            trialnum::Int,
+                            ntimesteps::Int,
+                            tup
+                        )
+
+Post trial function to to after each trial within the MCS.
+"""
 function smoke_post_trial_func(mcs::SimulationInstance, trialnum::Int, ntimesteps::Int, tup)
 
     # Unpack the payload object 
@@ -849,7 +902,34 @@ function smoke_post_trial_func(mcs::SimulationInstance, trialnum::Int, ntimestep
     end # end discount rates loop
 end
 
-# Internal function to compute the SCC in a Monte Carlo Simulation
+"""
+    _compute_smoke_scc_mcs(mm::MarginalModel, 
+                                n; 
+                                year::Int, 
+                                last_year::Int, 
+                                discount_rates, 
+                                certainty_equivalent::Bool,
+                                fair_parameter_set::Symbol = :random,
+                                fair_parameter_set_ids::Union{Vector{Int}, Nothing} = nothing,
+                                rffsp_sampling::Symbol = :random,
+                                rffsp_sampling_ids::Union{Vector{Int}, Nothing} = nothing,
+                                gas::Symbol, 
+                                save_list::Vector, 
+                                output_dir::String,
+                                save_md::Bool,
+                                save_cpc::Bool,
+                                save_slr_damages::Bool,
+                                compute_sectoral_values::Bool,
+                                compute_disaggregated_values::Bool,
+                                compute_domestic_values::Bool,
+                                CIAM_foresight::Symbol,
+                                CIAM_GDPcap::Bool,
+                                post_mcs_creation_function,
+                                pulse_size::Float64
+                            )
+
+Internal function to compute the SCC in a Monte Carlo Simulation.
+""" 
 function _compute_smoke_scc_mcs(mm::MarginalModel, 
                             n; 
                             year::Int, 
