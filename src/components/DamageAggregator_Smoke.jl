@@ -38,7 +38,11 @@ using Mimi
     damage_smoke_regions = Parameter(index=[time,fund_regions], unit="US\$2005/yr")
     damage_energy_regions = Parameter(index=[time,fund_regions], unit="billion US\$2005/yr")
 
+    # intermediates
+    gdp = Parameter(index=[time,country], unit="billion US\$2005/yr")
+
     # aggregated damages
+    total_damage_share = Variable(index=[time])
     total_damage = Variable(index=[time], unit="US\$2005/yr")
     total_damage_regions = Variable(index=[time, fund_regions], unit="US\$2005/yr")
     total_damage_countries = Variable(index=[time, country], unit="US\$2005/yr") # ag damages disaggregated via method in AgricultureDamagesDisaggregator
@@ -96,6 +100,9 @@ using Mimi
             (p.include_energy           ? v.energy_damage[t] : 0.) +
             (p.include_dice2016R2       ? p.damage_dice2016R2[t] * 1e9 : 0.) +
             (p.include_hs_damage        ? p.damage_hs[t] * 1e9 : 0.)
+
+        gdp = sum(p.gdp[t,:]) * 1e9
+        v.total_damage_share[t] = v.total_damage[t] / gdp
 
         # annual domestic aggregates - computed for interim model outputs and partial SCCs
         v.cromar_mortality_damage_domestic[t]   = sum(p.damage_cromar_mortality[t, v.domestic_idxs_country_dim_int])

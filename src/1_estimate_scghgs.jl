@@ -17,7 +17,7 @@ include("mcs.jl")
 include("scc.jl")
 
 # number of monte carlo trials
-num_trials = 10000
+num_trials = 10
 
 # get fair and rffsp trials (rffsp_fair_sequence comes from constants.jl)
 fair_parameter_set_ids = rffsp_fair_sequence[1:num_trials, "fair_id"]
